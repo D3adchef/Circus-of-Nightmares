@@ -27,16 +27,17 @@ class StorageScene extends Phaser.Scene {
       window.GameTimer.start = Date.now();
     }
 
-    this.timerBackground = this.add.rectangle(2100, 30, 160, 50, 0x000000, 0.6)
-      .setOrigin(1, 0).setStrokeStyle(3, 0xff0000);
-    this.timerText = this.add.text(2100, 30, '', {
+    // 🕒 Fixed-position timer
+    this.timerText = this.add.text(this.scale.width - 20, 20, '', {
       fontFamily: 'Courier New',
       fontSize: '36px',
       color: '#ff0000'
-    }).setOrigin(1, 0);
+    }).setScrollFactor(0).setOrigin(1, 0).setDepth(99);
 
-    this.introBox = this.add.rectangle(1152, 240, 1400, 140, 0x000000, 0.85).setStrokeStyle(4, 0xff00ff).setOrigin(0.5);
-    this.introText = this.add.text(1152, 240,
+    // 💬 Fixed-position intro box
+    this.introBox = this.add.rectangle(this.scale.width / 2, 240, 1400, 140, 0x000000, 0.85)
+      .setStrokeStyle(4, 0xff00ff).setOrigin(0.5).setScrollFactor(0).setDepth(99);
+    this.introText = this.add.text(this.scale.width / 2, 240,
       "Good luck figuring out how to get to the nail before the clown gets to you.",
       {
         fontFamily: 'monospace',
@@ -44,17 +45,18 @@ class StorageScene extends Phaser.Scene {
         fill: '#ffff00',
         align: 'center',
         wordWrap: { width: 1200 }
-      }).setOrigin(0.5);
+      }).setOrigin(0.5).setScrollFactor(0).setDepth(99);
 
-    this.interactBox = this.add.rectangle(1152, 700, 600, 140, 0x000000, 0.85)
-      .setStrokeStyle(3, 0xffffff).setOrigin(0.5).setVisible(false);
-    this.interactText = this.add.text(1152, 700, "", {
+    // 💬 Fixed-position interaction box
+    this.interactBox = this.add.rectangle(this.scale.width / 2, this.scale.height - 120, 600, 140, 0x000000, 0.85)
+      .setStrokeStyle(3, 0xffffff).setOrigin(0.5).setVisible(false).setScrollFactor(0).setDepth(99);
+    this.interactText = this.add.text(this.scale.width / 2, this.scale.height - 120, "", {
       fontFamily: 'monospace',
       fontSize: '24px',
       color: '#ffcc00',
       align: 'center',
       wordWrap: { width: 550 }
-    }).setOrigin(0.5).setVisible(false);
+    }).setOrigin(0.5).setVisible(false).setScrollFactor(0).setDepth(99);
 
     this.moanSound = this.sound.add('moan', { volume: 0.6 });
     this.clownSound = this.sound.add('clown', { volume: 0.6 });
@@ -66,11 +68,9 @@ class StorageScene extends Phaser.Scene {
     this.nailInteracted = false;
     this.transitioning = false;
 
-    this.walls = this.physics.add.staticGroup();
     const wall = this.add.rectangle(1110, 128, 80, 767, 0x000000, 0).setOrigin(0);
     this.physics.add.existing(wall, true);
-    this.walls.add(wall);
-    this.physics.add.collider(this.player, this.walls);
+    this.physics.add.collider(this.player, wall);
 
     this.clown = this.add.image(0, 0, 'clown').setScale(4).setVisible(false);
     this.time.addEvent({
@@ -168,7 +168,6 @@ class StorageScene extends Phaser.Scene {
       }
     });
 
-    // ✅ ESC key to quit to EntranceScene
     this.input.keyboard.on('keydown-ESC', () => {
       this.music.stop();
       this.scene.start('EntranceScene');

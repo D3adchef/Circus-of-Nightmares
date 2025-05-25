@@ -31,16 +31,14 @@ class EntranceScene extends Phaser.Scene {
       wordWrap: { width: 1100 }
     }).setOrigin(0.5);
     this.subtitleText = this.add.text(1152, 260,
-  "Press SPACEBAR to begin game and to interact with items.\nPress ESC key anytime to quit.",
-  {
-    fontFamily: 'monospace',
-    fontSize: '32px',
-    fill: '#ffff00',
-    align: 'center',
-    lineSpacing: 10
-  }
-).setOrigin(0.5);
-
+      "Press SPACEBAR to begin game and to interact with items.\nPress ESC key anytime to quit.",
+      {
+        fontFamily: 'monospace',
+        fontSize: '32px',
+        fill: '#ffff00',
+        align: 'center',
+        lineSpacing: 10
+      }).setOrigin(0.5);
 
     this.tweens.add({
       targets: [this.titleText, this.subtitleText],
@@ -62,26 +60,44 @@ class EntranceScene extends Phaser.Scene {
 
     this.cursors = this.input.keyboard.createCursorKeys();
 
-    // ✅ Updated warning and dialogue boxes (smaller, square format)
-    this.warningBox = this.add.rectangle(1152, 700, 600, 140, 0x000000, 0.85)
-      .setStrokeStyle(4, 0xffffff).setOrigin(0.5).setVisible(false);
-    this.warningText = this.add.text(1152, 700, "", {
+    // 🧱 Fixed-position timer
+    this.timerText = this.add.text(this.scale.width - 20, 20, '', {
+      fontFamily: 'Courier New',
+      fontSize: '36px',
+      color: '#ff0000'
+    }).setScrollFactor(0).setOrigin(1, 0).setDepth(99);
+
+    // 🧱 Fixed-position warning box
+    this.warningBox = this.add.rectangle(this.scale.width / 2, this.scale.height - 160, 600, 140, 0x000000, 0.85)
+      .setStrokeStyle(4, 0xffffff)
+      .setOrigin(0.5)
+      .setScrollFactor(0)
+      .setVisible(false)
+      .setDepth(99);
+
+    this.warningText = this.add.text(this.scale.width / 2, this.scale.height - 160, "", {
       fontFamily: 'monospace',
       fontSize: '24px',
       color: '#ffcc00',
       align: 'center',
       wordWrap: { width: 550 }
-    }).setOrigin(0.5).setVisible(false);
+    }).setOrigin(0.5).setScrollFactor(0).setVisible(false).setDepth(99);
 
-    this.dialogueBox = this.add.rectangle(1152, 600, 500, 140, 0x000000, 0.9)
-      .setStrokeStyle(3, 0xff0000).setOrigin(0.5).setVisible(false);
-    this.dialogueText = this.add.text(1152, 600, "", {
+    // 🧱 Fixed-position dialogue box
+    this.dialogueBox = this.add.rectangle(this.scale.width / 2, this.scale.height - 300, 500, 140, 0x000000, 0.9)
+      .setStrokeStyle(3, 0xff0000)
+      .setOrigin(0.5)
+      .setScrollFactor(0)
+      .setVisible(false)
+      .setDepth(99);
+
+    this.dialogueText = this.add.text(this.scale.width / 2, this.scale.height - 300, "", {
       fontFamily: 'monospace',
       fontSize: '24px',
       color: '#ffffff',
       align: 'center',
       wordWrap: { width: 450 }
-    }).setOrigin(0.5).setVisible(false);
+    }).setOrigin(0.5).setScrollFactor(0).setVisible(false).setDepth(99);
 
     this.input.keyboard.on('keydown-SPACE', () => {
       if (!this.controlsEnabled) return;
@@ -96,7 +112,7 @@ class EntranceScene extends Phaser.Scene {
       }
     });
 
-    // ✅ Clown flicker logic copied from StorageScene
+    // 👻 Clown flicker
     this.clown = this.add.image(0, 0, 'clown').setScale(4).setVisible(false);
     this.time.addEvent({
       delay: Phaser.Math.Between(5000, 9000),
@@ -114,16 +130,6 @@ class EntranceScene extends Phaser.Scene {
     if (!window.GameTimer.start) {
       window.GameTimer.start = Date.now();
     }
-
-    this.timerBackground = this.add.rectangle(2100, 30, 160, 50, 0x000000, 0.6)
-      .setOrigin(1, 0)
-      .setStrokeStyle(3, 0xff0000);
-    this.timerText = this.add.text(2100, 30, '', {
-      fontFamily: 'Courier New',
-      fontSize: '36px',
-      color: '#ff0000',
-      align: 'center'
-    }).setOrigin(1, 0);
   }
 
   update() {
@@ -143,7 +149,6 @@ class EntranceScene extends Phaser.Scene {
       this.player.setVelocityX(200);
       this.player.setFlipX(false);
     }
-
     if (this.cursors.up.isDown) {
       this.player.setVelocityY(-200);
     } else if (this.cursors.down.isDown) {

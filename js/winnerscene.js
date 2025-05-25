@@ -31,15 +31,24 @@ class WinnerScene extends Phaser.Scene {
     this.ambience = this.sound.add('clownAmbience', { loop: true, volume: 0.6 });
     this.ambience.play();
 
-    this.interactBox = this.add.rectangle(1152, 700, 600, 140, 0x000000, 0.85)
-      .setStrokeStyle(3, 0xff0000).setOrigin(0.5).setVisible(true);
-    this.interactText = this.add.text(1152, 700, "I think we found the Killer Clown's Hideout.", {
+    // 🧷 Fixed position interaction box
+    this.interactBox = this.add.rectangle(this.scale.width / 2, 80, 600, 140, 0x000000, 0.85)
+      .setStrokeStyle(3, 0xff0000)
+      .setScrollFactor(0)
+      .setOrigin(0.5)
+      .setDepth(99)
+      .setVisible(true);
+
+    this.interactText = this.add.text(this.scale.width / 2, 80, "I think we found the Killer Clown's Hideout.", {
       fontFamily: 'monospace',
       fontSize: '24px',
       color: '#ff4444',
       align: 'center',
       wordWrap: { width: 550 }
-    }).setOrigin(0.5).setVisible(true);
+    }).setOrigin(0.5)
+      .setScrollFactor(0)
+      .setDepth(99)
+      .setVisible(true);
 
     this.time.delayedCall(1000, () => {
       this.input.keyboard.once('keydown-SPACE', () => {
@@ -101,7 +110,6 @@ class WinnerScene extends Phaser.Scene {
       }
     });
 
-    // ESC to return to EntranceScene
     this.input.keyboard.on('keydown-ESC', () => {
       this.ambience.stop();
       this.scene.start('EntranceScene');
@@ -109,7 +117,7 @@ class WinnerScene extends Phaser.Scene {
   }
 
   trigger(message, soundKey) {
-    this.sound.play(soundKey);
+    if (soundKey) this.sound.play(soundKey);
     this.show(message);
   }
 
@@ -117,7 +125,7 @@ class WinnerScene extends Phaser.Scene {
     this.interactText.setText(message);
     this.interactText.setVisible(true);
     this.interactBox.setVisible(true);
-    this.time.delayedCall(300000, () => {
+    this.time.delayedCall(3000, () => {
       this.interactText.setVisible(false);
       this.interactBox.setVisible(false);
     });

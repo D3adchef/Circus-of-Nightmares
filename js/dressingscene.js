@@ -27,28 +27,28 @@ class DressingScene extends Phaser.Scene {
 
     this.cursors = this.input.keyboard.createCursorKeys();
 
-    this.timerBackground = this.add.rectangle(2100, 30, 160, 50, 0x000000, 0.6)
-      .setOrigin(1, 0)
-      .setStrokeStyle(3, 0xff0000);
-    this.timerText = this.add.text(2100, 30, '', {
+    // 🕒 Fixed-position timer
+    this.timerText = this.add.text(this.scale.width - 20, 20, '', {
       fontFamily: 'Courier New',
       fontSize: '36px',
       color: '#ff0000'
-    }).setOrigin(1, 0);
+    }).setOrigin(1, 0).setScrollFactor(0).setDepth(99);
 
     this.music = this.sound.add('dressingMusic', { loop: true, volume: 0.4 });
     this.music.play();
 
-    this.interactBox = this.add.rectangle(1152, 700, 600, 140, 0x000000, 0.85)
-      .setStrokeStyle(3, 0xffffff).setOrigin(0.5).setVisible(true);
-    this.interactText = this.add.text(1152, 700,
+    // 💬 Fixed-position interaction popup
+    this.interactBox = this.add.rectangle(this.scale.width / 2, this.scale.height - 120, 600, 140, 0x000000, 0.85)
+      .setStrokeStyle(3, 0xffffff).setOrigin(0.5).setVisible(true).setScrollFactor(0).setDepth(99);
+
+    this.interactText = this.add.text(this.scale.width / 2, this.scale.height - 120,
       "To retrieve the jack-in-the-box you must face yourself before and after becoming the clown.", {
       fontFamily: 'monospace',
       fontSize: '24px',
       color: '#ffcc00',
       align: 'center',
       wordWrap: { width: 550 }
-    }).setOrigin(0.5).setVisible(true);
+    }).setOrigin(0.5).setVisible(true).setScrollFactor(0).setDepth(99);
 
     this.boxRiddleShown = false;
     this.rightRoomUnlocked = false;
@@ -65,11 +65,9 @@ class DressingScene extends Phaser.Scene {
     this.jackSequence = ['closest', 'farthest', 'middle', 'jack'];
     this.jackInput = [];
 
-    this.walls = this.physics.add.staticGroup();
     const wall = this.add.rectangle(1204, 128, 30, 769, 0x000000, 0).setOrigin(0);
     this.physics.add.existing(wall, true);
-    this.walls.add(wall);
-    this.physics.add.collider(this.player, this.walls);
+    this.physics.add.collider(this.player, wall);
 
     this.input.keyboard.on('keydown-SPACE', () => {
       if (!this.controlsEnabled) return;
@@ -161,7 +159,6 @@ class DressingScene extends Phaser.Scene {
       }
     });
 
-    // ✅ ESC key to return to entrance
     this.input.keyboard.on('keydown-ESC', () => {
       this.music.stop();
       this.scene.start('EntranceScene');

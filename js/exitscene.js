@@ -27,26 +27,27 @@ class ExitScene extends Phaser.Scene {
 
     this.cursors = this.input.keyboard.createCursorKeys();
 
-    this.timerBackground = this.add.rectangle(2100, 30, 160, 50, 0x000000, 0.6)
-      .setOrigin(1, 0).setStrokeStyle(3, 0xff0000);
-    this.timerText = this.add.text(2100, 30, '', {
+    // 🕒 Fixed-position timer
+    this.timerText = this.add.text(this.scale.width - 20, 20, '', {
       fontFamily: 'Courier New',
       fontSize: '36px',
       color: '#ff0000'
-    }).setOrigin(1, 0);
+    }).setOrigin(1, 0).setScrollFactor(0).setDepth(99);
 
     this.music = this.sound.add('jack', { loop: true, volume: 0.4 });
     this.music.play();
 
-    this.interactBox = this.add.rectangle(1152, 700, 600, 140, 0x000000, 0.85)
-      .setStrokeStyle(3, 0xffffff).setOrigin(0.5).setVisible(true);
-    this.interactText = this.add.text(1152, 700, "You made it out... but the circus remembers.", {
+    // 💬 Fixed-position interaction text
+    this.interactBox = this.add.rectangle(this.scale.width / 2, this.scale.height - 120, 600, 140, 0x000000, 0.85)
+      .setStrokeStyle(3, 0xffffff).setOrigin(0.5).setScrollFactor(0).setDepth(99).setVisible(true);
+    this.interactText = this.add.text(this.scale.width / 2, this.scale.height - 120,
+      "You made it out... but the circus remembers.", {
       fontFamily: 'monospace',
       fontSize: '24px',
       color: '#ffcc00',
       align: 'center',
       wordWrap: { width: 550 }
-    }).setOrigin(0.5).setVisible(true);
+    }).setOrigin(0.5).setScrollFactor(0).setDepth(99).setVisible(true);
 
     this.step = 0;
     this.controlsEnabled = false;
@@ -117,7 +118,6 @@ class ExitScene extends Phaser.Scene {
       }
     });
 
-    // ESC to return to EntranceScene
     this.input.keyboard.on('keydown-ESC', () => {
       this.music.stop();
       this.scene.start('EntranceScene');
@@ -143,10 +143,6 @@ class ExitScene extends Phaser.Scene {
     }
     if (this.cursors.up.isDown) this.player.setVelocityY(-200);
     else if (this.cursors.down.isDown) this.player.setVelocityY(200);
-
-    const x = this.player.x.toFixed(2);
-    const y = this.player.y.toFixed(2);
-    console.log(`Player X: ${x}, Y: ${y}`);
 
     const remaining = window.GameTimer.getRemaining();
     const seconds = Math.floor(remaining / 1000);

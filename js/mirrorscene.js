@@ -21,7 +21,7 @@ class MirrorScene extends Phaser.Scene {
     this.cameras.main.setZoom(0.75);
 
     this.cursors = this.input.keyboard.createCursorKeys();
-    this.escKey = this.input.keyboard.addKey('ESC'); // ✅ ESC key setup
+    this.escKey = this.input.keyboard.addKey('ESC');
 
     if (!window.GameTimer.start) {
       window.GameTimer.start = Date.now();
@@ -30,15 +30,17 @@ class MirrorScene extends Phaser.Scene {
     this.music = this.sound.add('mirrorsMusic', { loop: true, volume: 0.4 });
     this.music.play();
 
-    this.timerBackground = this.add.rectangle(2100, 30, 160, 50, 0x000000, 0.6).setOrigin(1, 0).setStrokeStyle(3, 0xff0000);
-    this.timerText = this.add.text(2100, 30, '', {
+    // ✅ Fixed-position timer
+    this.timerText = this.add.text(this.scale.width - 20, 20, '', {
       fontFamily: 'Courier New',
       fontSize: '36px',
       color: '#ff0000'
-    }).setOrigin(1, 0);
+    }).setOrigin(1, 0).setScrollFactor(0).setDepth(99);
 
-    this.startBox = this.add.rectangle(1152, 240, 1400, 140, 0x000000, 0.85).setStrokeStyle(4, 0xff00ff).setOrigin(0.5);
-    this.startText = this.add.text(1152, 240,
+    // ✅ Start popup box remains in center
+    this.startBox = this.add.rectangle(this.scale.width / 2, 240, 1400, 140, 0x000000, 0.85)
+      .setStrokeStyle(4, 0xff00ff).setOrigin(0.5).setScrollFactor(0);
+    this.startText = this.add.text(this.scale.width / 2, 240,
       "A shard is missing and you must replace it to leave.\nI recommend finding it before someone finds it and sticks it in you.",
       {
         fontFamily: 'monospace',
@@ -46,7 +48,7 @@ class MirrorScene extends Phaser.Scene {
         fill: '#ffff00',
         align: 'center',
         wordWrap: { width: 1200 }
-      }).setOrigin(0.5);
+      }).setOrigin(0.5).setScrollFactor(0);
 
     this.controlsEnabled = false;
     this.hasShard = false;
@@ -57,16 +59,17 @@ class MirrorScene extends Phaser.Scene {
       this.controlsEnabled = true;
     });
 
-    this.interactBox = this.add.rectangle(1152, 700, 600, 140, 0x000000, 0.85)
-      .setStrokeStyle(3, 0xffffff).setOrigin(0.5).setVisible(false);
+    // ✅ Fixed-position interaction box
+    this.interactBox = this.add.rectangle(this.scale.width / 2, this.scale.height - 120, 600, 140, 0x000000, 0.85)
+      .setStrokeStyle(3, 0xffffff).setOrigin(0.5).setVisible(false).setScrollFactor(0).setDepth(99);
 
-    this.interactText = this.add.text(1152, 700, "", {
+    this.interactText = this.add.text(this.scale.width / 2, this.scale.height - 120, "", {
       fontFamily: 'monospace',
       fontSize: '24px',
       color: '#ffcc00',
       align: 'center',
       wordWrap: { width: 550 }
-    }).setOrigin(0.5).setVisible(false);
+    }).setOrigin(0.5).setVisible(false).setScrollFactor(0).setDepth(99);
 
     this.flashOverlay = this.add.rectangle(1152, 512, 2304, 1025, 0xffffff, 0).setDepth(20);
 

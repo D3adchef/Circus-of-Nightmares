@@ -26,25 +26,43 @@ class EntrancePostGameScene extends Phaser.Scene {
     this.controlsEnabled = false;
     this.cursors = this.input.keyboard.createCursorKeys();
 
-    this.warningBox = this.add.rectangle(1152, 700, 600, 140, 0x000000, 0.85)
-      .setStrokeStyle(4, 0xffffff).setOrigin(0.5).setVisible(false);
-    this.warningText = this.add.text(1152, 700, "", {
+    // 💬 Fixed-position warning and dialogue boxes
+    this.warningBox = this.add.rectangle(this.scale.width / 2, this.scale.height - 100, 600, 140, 0x000000, 0.85)
+      .setStrokeStyle(4, 0xffffff)
+      .setOrigin(0.5)
+      .setScrollFactor(0)
+      .setDepth(99)
+      .setVisible(false);
+
+    this.warningText = this.add.text(this.scale.width / 2, this.scale.height - 100, "", {
       fontFamily: 'monospace',
       fontSize: '26px',
       color: '#ffcc00',
       align: 'center',
       wordWrap: { width: 550 }
-    }).setOrigin(0.5).setVisible(false);
+    }).setOrigin(0.5)
+      .setScrollFactor(0)
+      .setDepth(99)
+      .setVisible(false);
 
-    this.dialogueBox = this.add.rectangle(1152, 600, 600, 140, 0x000000, 0.9)
-      .setStrokeStyle(3, 0xff0000).setOrigin(0.5).setVisible(true);
-    this.dialogueText = this.add.text(1152, 600, "Now you may see what's behind the STAFF door.", {
+    this.dialogueBox = this.add.rectangle(this.scale.width / 2, this.scale.height / 2 - 40, 600, 140, 0x000000, 0.9)
+      .setStrokeStyle(3, 0xff0000)
+      .setOrigin(0.5)
+      .setScrollFactor(0)
+      .setDepth(99)
+      .setVisible(true);
+
+    this.dialogueText = this.add.text(this.scale.width / 2, this.scale.height / 2 - 40,
+      "Now you may see what's behind the STAFF door.", {
       fontFamily: 'monospace',
       fontSize: '24px',
       color: '#ffffff',
       align: 'center',
       wordWrap: { width: 550 }
-    }).setOrigin(0.5).setVisible(true);
+    }).setOrigin(0.5)
+      .setScrollFactor(0)
+      .setDepth(99)
+      .setVisible(true);
 
     this.input.keyboard.once('keydown-SPACE', () => {
       this.dialogueBox.setVisible(false);
@@ -55,7 +73,6 @@ class EntrancePostGameScene extends Phaser.Scene {
     this.clown = this.add.image(0, 0, 'clown').setAlpha(0).setScale(4).setDepth(10);
     this.scheduleClownFlicker();
 
-    // ESC to return to EntranceScene
     this.input.keyboard.on('keydown-ESC', () => {
       this.entranceMusic.stop();
       this.scene.start('EntranceScene');

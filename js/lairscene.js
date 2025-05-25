@@ -32,15 +32,24 @@ class LairScene extends Phaser.Scene {
     this.ambience = this.sound.add('clownAmbience', { loop: true, volume: 0.6 });
     this.ambience.play();
 
-    this.interactBox = this.add.rectangle(1152, 700, 600, 140, 0x000000, 0.85)
-      .setStrokeStyle(3, 0xff0000).setOrigin(0.5).setVisible(true);
-    this.interactText = this.add.text(1152, 700, "Home Sweet Home.", {
+    // 🎯 Fixed-position interaction box
+    this.interactBox = this.add.rectangle(this.scale.width / 2, this.scale.height - 100, 600, 140, 0x000000, 0.85)
+      .setStrokeStyle(3, 0xff0000)
+      .setOrigin(0.5)
+      .setScrollFactor(0)
+      .setDepth(99)
+      .setVisible(true);
+
+    this.interactText = this.add.text(this.scale.width / 2, this.scale.height - 100, "Home Sweet Home.", {
       fontFamily: 'monospace',
       fontSize: '24px',
       color: '#ff4444',
       align: 'center',
       wordWrap: { width: 550 }
-    }).setOrigin(0.5).setVisible(true);
+    }).setOrigin(0.5)
+      .setScrollFactor(0)
+      .setDepth(99)
+      .setVisible(true);
 
     this.input.keyboard.once('keydown-SPACE', () => {
       this.interactBox.setVisible(false);
@@ -48,14 +57,12 @@ class LairScene extends Phaser.Scene {
       this.controlsEnabled = true;
     });
 
-    // Invisible wall
     const wall = this.add.rectangle(1110, 128, 30, 769, 0x000000, 0).setOrigin(0);
     this.physics.add.existing(wall, true);
     this.physics.add.collider(this.player, wall);
 
     this.drawerStep = 0;
 
-    // ⏳ Hidden 5-minute timer
     this.time.delayedCall(300000, () => {
       this.controlsEnabled = false;
       this.player.setVelocity(0);
@@ -107,7 +114,6 @@ class LairScene extends Phaser.Scene {
       }
     });
 
-    // ESC to return to EntranceScene
     this.input.keyboard.on('keydown-ESC', () => {
       this.ambience.stop();
       this.scene.start('EntranceScene');
@@ -123,7 +129,7 @@ class LairScene extends Phaser.Scene {
     this.interactText.setText(message);
     this.interactText.setVisible(true);
     this.interactBox.setVisible(true);
-    this.time.delayedCall(300000, () => {
+    this.time.delayedCall(3000, () => {
       this.interactText.setVisible(false);
       this.interactBox.setVisible(false);
     });
